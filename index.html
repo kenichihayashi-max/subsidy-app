@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>補助金・助成金 診断アプリ</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Kaku Gothic ProN', 'Yu Gothic', 'Meiryo', sans-serif;
+      background: #f0f4ff;
+      color: #1a202c;
+      min-height: 100vh;
+    }
+
+    /* ── ヘッダー ── */
+    .header {
+      background: linear-gradient(135deg, #1a56db 0%, #0e3a8c 100%);
+      color: white;
+      padding: 2rem 1.5rem 1.75rem;
+      text-align: center;
+    }
+    .header h1 { font-size: 1.7rem; font-weight: 800; margin-bottom: 0.4rem; letter-spacing: -0.5px; }
+    .header p { opacity: 0.85; font-size: 0.9rem; }
+
+    /* ── コンテナ ── */
+    .container { max-width: 680px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+    /* ── データソース表示 ── */
+    .data-status {
+      text-align: center;
+      font-size: 0.78rem;
+      color: #718096;
+      margin-bottom: 1.25rem;
+    }
+    .data-status .ok { color: #38a169; font-weight: 600; }
+    .data-status .warn { color: #d69e2e; font-weight: 600; }
+
+    /* ── プログレスバー ── */
+    .progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      margin-bottom: 1.75rem;
+    }
+    .step-dot {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background: #e2e8f0;
+      color: #a0aec0;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.3s;
+      flex-shrink: 0;
+    }
+    .step-dot.active { background: #1a56db; color: white; box-shadow: 0 0 0 4px #c3d8fb; }
+    .step-dot.done { background: #38a169; color: white; }
+    .step-line { flex: 1; max-width: 72px; height: 3px; background: #e2e8f0; transition: background 0.3s; }
+    .step-line.done { background: #38a169; }
+
+    /* ── カード ── */
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 1.75rem 1.5rem;
+      box-shadow: 0 4px 20px rgba(26, 86, 219, 0.08);
+      margin-bottom: 1.25rem;
+    }
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #1a56db;
+      margin-bottom: 1.5rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 2px solid #ebf4ff;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+
+    /* ── フォーム ── */
+    .form-group { margin-bottom: 1.1rem; }
+    label.field-label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.88rem;
+      color: #4a5568;
+      margin-bottom: 0.4rem;
+    }
+    select {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background: white;
+      transition: border-color 0.2s;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 0.75rem center;
+      padding-right: 2.5rem;
+    }
+    select:focus { outline: none; border-color: #1a56db; }
+
+    /* ── チェックボックスグリッド ── */
+    .checkbox-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.6rem;
+    }
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.7rem 0.75rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      user-select: none;
+    }
+    .checkbox-item:hover { border-color: #93b4fb; background: #f7faff; }
+    .checkbox-item.checked { border-color: #1a56db; background: #ebf4ff; }
+    .checkbox-item input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; flex-shrink: 0; }
+    .checkbox-item span { font-size: 0.85rem; line-height: 1.3; color: #374151; }
+
+    /* ── ボタン ── */
+    .btn {
+      padding: 0.7rem 1.75rem;
+      border: none; border-radius: 8px;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-primary { background: #1a56db; color: white; }
+    .btn-primary:hover { background: #1446b5; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(26,86,219,0.3); }
+    .btn-secondary { background: #e2e8f0; color: #4a5568; }
+    .btn-secondary:hover { background: #cbd5e0; }
+    .btn-group { display: flex; justify-content: space-between; align-items: center; margin-top: 1.5rem; }
+
+    /* ── 結果サマリー ── */
+    .result-banner {
+      background: linear-gradient(135deg, #f0fff4, #e6fffa);
+      border: 2px solid #68d391;
+      border-radius: 14px;
+      padding: 1.25rem;
+      text-align: center;
+      margin-bottom: 1.25rem;
+    }
+    .result-count { font-size: 2.5rem; font-weight: 800; color: #276749; line-height: 1; }
+    .result-unit { font-size: 1rem; font-weight: 600; color: #276749; }
+    .result-note { font-size: 0.82rem; color: #2f855a; margin-top: 0.35rem; }
+
+    /* ── 補助金カード ── */
+    .subsidy-card {
+      background: white;
+      border-radius: 12px;
+      padding: 1.25rem;
+      margin-bottom: 0.85rem;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      border-left: 5px solid #1a56db;
+      transition: box-shadow 0.2s;
+    }
+    .subsidy-card:hover { box-shadow: 0 4px 18px rgba(0,0,0,0.1); }
+    .subsidy-card.joseikin { border-left-color: #d69e2e; }
+
+    .subsidy-top {
+      display: flex; align-items: flex-start;
+      justify-content: space-between; gap: 0.5rem;
+      margin-bottom: 0.75rem;
+    }
+    .subsidy-name { font-size: 0.98rem; font-weight: 700; color: #1a202c; flex: 1; }
+    .badge {
+      padding: 0.22rem 0.65rem; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 700;
+      white-space: nowrap; flex-shrink: 0;
+    }
+    .badge-補助金 { background: #ebf4ff; color: #1a56db; }
+    .badge-助成金 { background: #fefcbf; color: #744210; }
+
+    .subsidy-meta {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 0.45rem 1rem; margin-bottom: 0.75rem;
+    }
+    .meta-item {}
+    .meta-label { font-size: 0.72rem; color: #718096; }
+    .meta-value { font-size: 0.85rem; font-weight: 700; color: #2d3748; }
+
+    .subsidy-summary { font-size: 0.84rem; color: #4a5568; line-height: 1.65; margin-bottom: 0.6rem; }
+    .subsidy-usecases {
+      font-size: 0.8rem; color: #2c5282;
+      background: #ebf8ff; border: 1px solid #bee3f8;
+      padding: 0.4rem 0.6rem; border-radius: 5px;
+      margin-bottom: 0.6rem; line-height: 1.6;
+    }
+    .usecases-label { font-weight: 700; margin-right: 0.3rem; }
+    .subsidy-note {
+      font-size: 0.78rem; color: #c05621;
+      background: #fffaf0; border: 1px solid #fbd38d;
+      padding: 0.35rem 0.6rem; border-radius: 5px;
+      margin-bottom: 0.6rem;
+    }
+    .subsidy-link {
+      font-size: 0.82rem; font-weight: 600;
+      color: #1a56db; text-decoration: none;
+    }
+    .subsidy-link:hover { text-decoration: underline; }
+
+    /* ── 注意事項 ── */
+    .disclaimer {
+      font-size: 0.78rem; color: #718096;
+      background: #f7fafc; border-radius: 8px;
+      padding: 0.85rem 1rem; margin-top: 1rem;
+      line-height: 1.65;
+    }
+
+    /* ── 設定バナー ── */
+    .config-banner {
+      background: #fffbeb; border: 1px solid #f6e05e;
+      border-radius: 10px; padding: 0.85rem 1rem;
+      font-size: 0.82rem; color: #744210;
+      margin-bottom: 1rem; line-height: 1.6;
+    }
+    .config-banner strong { display: block; margin-bottom: 0.25rem; }
+
+    .no-results { text-align: center; padding: 2rem 1rem; color: #718096; font-size: 0.9rem; }
+
+    @media (max-width: 500px) {
+      .header h1 { font-size: 1.35rem; }
+      .checkbox-grid { grid-template-columns: 1fr; }
+      .subsidy-meta { grid-template-columns: 1fr; }
+      .card { padding: 1.25rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <h1>補助金・助成金 診断アプリ</h1>
+  <p>企業の状況に合った補助金・助成金を診断します</p>
+</div>
+
+<div class="container">
+
+  <!-- データソース状態 -->
+  <div class="data-status" id="dataStatus">データ読み込み中...</div>
+
+  <!-- プログレス -->
+  <div class="progress" id="progress"></div>
+
+  <!-- ===== STEP 1: 基本情報 ===== -->
+  <div id="step1" class="step-pane">
+    <div class="card">
+      <div class="card-title">STEP 1 &nbsp;企業の基本情報</div>
+
+      <div class="form-group">
+        <label class="field-label">業種</label>
+        <select id="industry">
+          <option value="">選択してください</option>
+          <option value="製造業">製造業</option>
+          <option value="サービス業">サービス業</option>
+          <option value="小売・飲食">小売・飲食</option>
+          <option value="建設業">建設業</option>
+          <option value="IT・情報">IT・情報</option>
+          <option value="農林水産">農林水産</option>
+          <option value="医療・福祉">医療・福祉</option>
+          <option value="その他">その他</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label">従業員数（役員・パート含む）</label>
+        <select id="employees">
+          <option value="">選択してください</option>
+          <option value="1">1名（自分のみ・個人事業主）</option>
+          <option value="5">2〜5名</option>
+          <option value="20">6〜20名</option>
+          <option value="50">21〜50名</option>
+          <option value="100">51〜100名</option>
+          <option value="300">101〜300名</option>
+          <option value="9999">301名以上</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label">資本金（個人事業主は「個人事業主」を選択）</label>
+        <select id="capital">
+          <option value="">選択してください</option>
+          <option value="kojin">個人事業主</option>
+          <option value="under1000">1,000万円以下</option>
+          <option value="under5000">1,001万〜5,000万円</option>
+          <option value="under1oku">5,001万〜1億円</option>
+          <option value="over1oku">1億円超</option>
+        </select>
+      </div>
+
+      <div class="btn-group">
+        <div></div>
+        <button class="btn btn-primary" onclick="goTo(2)">次へ →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STEP 2: 状況 ===== -->
+  <div id="step2" class="step-pane" style="display:none">
+    <div class="card">
+      <div class="card-title">STEP 2 &nbsp;設立・経営状況</div>
+
+      <div class="form-group">
+        <label class="field-label">設立からの年数</label>
+        <select id="years">
+          <option value="">選択してください</option>
+          <option value="0">1年未満（創業直後）</option>
+          <option value="1">1〜2年</option>
+          <option value="3">3〜5年</option>
+          <option value="6">6〜10年</option>
+          <option value="11">11年以上</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label">直近の売上変化（前年比）</label>
+        <select id="revenueChange">
+          <option value="">選択してください</option>
+          <option value="increase">増加</option>
+          <option value="flat">横ばい（±10%未満）</option>
+          <option value="decrease10">10%以上減少</option>
+          <option value="decrease30">30%以上減少</option>
+          <option value="new">創業直後のため比較なし</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="field-label">従業員の雇用形態</label>
+        <select id="employment">
+          <option value="">選択してください</option>
+          <option value="all_regular">全員正社員</option>
+          <option value="mixed">正社員＋非正規混在</option>
+          <option value="all_part">非正規・アルバイト中心</option>
+          <option value="solo">一人で経営（雇用なし）</option>
+        </select>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="goTo(1)">← 戻る</button>
+        <button class="btn btn-primary" onclick="goTo(3)">次へ →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STEP 3: 活用目的 ===== -->
+  <div id="step3" class="step-pane" style="display:none">
+    <div class="card">
+      <div class="card-title">STEP 3 &nbsp;活用目的（複数選択可）</div>
+      <p style="font-size:0.83rem;color:#718096;margin-bottom:1rem;">当てはまるものをすべて選んでください</p>
+
+      <div class="checkbox-grid" id="purposeGrid"></div>
+
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="goTo(2)">← 戻る</button>
+        <button class="btn btn-primary" onclick="showResults()">診断する →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STEP 4: 結果 ===== -->
+  <div id="step4" class="step-pane" style="display:none">
+    <div id="resultBanner"></div>
+    <div id="resultList"></div>
+    <div class="disclaimer">
+      ※ 本診断は一般的な要件をもとにした参考情報です。実際の申請にあたっては各補助金・助成金の公式サイトや
+      担当窓口で最新情報を必ずご確認ください。要件・締切・金額は変更される場合があります。
+    </div>
+    <div style="text-align:center;margin-top:1.25rem;">
+      <button class="btn btn-secondary" onclick="goTo(1)">最初からやり直す</button>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+// ============================================================
+// 設定: Googleスプレッドシート連携
+// ============================================================
+// セットアップ後、下記 SHEET_ID を実際のIDに書き換えてください。
+// （scripts/setup_subsidy_sheet.py を実行すると ID が発行されます）
+const SHEET_ID   = '13vrbrpslBFhSQVlva9QodmdI2TWBcWyDgPWm4WdxUfo';
+const SHEET_NAME = '補助金マスター';
+
+// ============================================================
+// 内蔵フォールバックデータ（Sheets未設定時に使用）
+// ============================================================
+const FALLBACK = [
+  { id:'1', name:'小規模事業者持続化補助金', type:'補助金', ministry:'中小企業庁',
+    target_industry:'全業種', max_employees:'20', min_years:'0', max_years:'',
+    purposes:'販路開拓・集客|設備投資|IT化・デジタル化',
+    max_amount:'最大50万円（通常）/ 最大250万円（特別枠）', subsidy_rate:'2/3',
+    deadline:'2025年度公募中',
+    summary:'小規模事業者の販路開拓や業務効率化を支援。通常枠は最大50万円、特別枠・成長枠は最大250万円。',
+    url:'https://s23.jizokukahojokin.info/', active:'TRUE',
+    note:'サービス業は5名以下・製造業等は20名以下が対象',
+    use_cases:'ホームページ制作・リニューアル、ECサイト構築、チラシ・パンフレット作成、店舗看板・改装、展示会出展費用' },
+
+  { id:'2', name:'IT導入補助金2025', type:'補助金', ministry:'経済産業省',
+    target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
+    purposes:'IT化・デジタル化',
+    max_amount:'最大450万円', subsidy_rate:'1/2〜4/5',
+    deadline:'2025年度公募中',
+    summary:'ITツール・ソフトウェアの導入費用を補助。業務効率化・デジタル化・セキュリティ対策を推進する中小企業を支援。',
+    url:'https://www.it-hojo.jp/', active:'TRUE',
+    note:'IT導入支援事業者と連携して申請が必要',
+    use_cases:'会計ソフト導入、受発注・在庫管理システム、勤怠管理システム、ECサイト構築、セキュリティ対策ソフト' },
+
+  { id:'3', name:'ものづくり補助金（第20次）', type:'補助金', ministry:'中小企業庁',
+    target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
+    purposes:'設備投資|研究開発|省力化・自動化',
+    max_amount:'最大1,250万円', subsidy_rate:'1/2〜2/3',
+    deadline:'2025年度公募中',
+    summary:'革新的な製品・サービス開発や生産プロセスの改善を支援。サービス業の革新的なサービス開発も対象。',
+    url:'https://portal.monodukuri-hojo.jp/', active:'TRUE', note:'',
+    use_cases:'工作機械・生産設備の購入、試作品開発、新サービス用システム開発、専用ソフトウェア開発' },
+
+  { id:'4', name:'事業再構築補助金', type:'補助金', ministry:'中小企業庁',
+    target_industry:'全業種', max_employees:'2000', min_years:'0', max_years:'',
+    purposes:'事業転換・新規事業|販路開拓・集客',
+    max_amount:'最大7,000万円', subsidy_rate:'1/2〜2/3',
+    deadline:'公募中（要確認）',
+    summary:'新分野展開・業態転換・業種転換等を支援。コロナ影響からの回復・成長を目指す事業者が対象。',
+    url:'https://jigyou-saikouchiku.go.jp/', active:'TRUE',
+    note:'売上高の10%以上減少等の要件あり',
+    use_cases:'新規事業用設備購入、店舗改装・新規出店、新業態向けシステム開発、ECサイト新設' },
+
+  { id:'5', name:'キャリアアップ助成金（正社員化コース）', type:'助成金', ministry:'厚生労働省',
+    target_industry:'全業種', max_employees:'', min_years:'0', max_years:'',
+    purposes:'雇用・人材育成',
+    max_amount:'1人あたり最大80万円', subsidy_rate:'',
+    deadline:'通年受付',
+    summary:'有期雇用労働者・パート等を正規雇用に転換した場合に支給。非正規から正規への転換を後押し。',
+    url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/part_haken/jigyounushi/career.html',
+    active:'TRUE', note:'非正規から正規転換が要件',
+    use_cases:'パート・アルバイトの正社員化、契約社員の正規雇用転換' },
+
+  { id:'6', name:'人材開発支援助成金', type:'助成金', ministry:'厚生労働省',
+    target_industry:'全業種', max_employees:'', min_years:'0', max_years:'',
+    purposes:'雇用・人材育成',
+    max_amount:'訓練費の50〜75%', subsidy_rate:'1/2〜3/4',
+    deadline:'通年受付',
+    summary:'労働者への職業訓練・研修の実施に対して、訓練費用と訓練中の賃金の一部を助成。',
+    url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/d01-1.html',
+    active:'TRUE', note:'',
+    use_cases:'社員研修・スキルアップ講座、資格取得支援、新人研修プログラム、外部セミナー受講費用' },
+
+  { id:'7', name:'業務改善助成金', type:'助成金', ministry:'厚生労働省',
+    target_industry:'全業種', max_employees:'100', min_years:'0', max_years:'',
+    purposes:'設備投資|労働環境改善',
+    max_amount:'最大600万円', subsidy_rate:'4/5〜9/10',
+    deadline:'通年受付',
+    summary:'最低賃金を引き上げた事業者に対し、生産性向上のための設備投資等の費用を助成。',
+    url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/zigyonushi/shienjigyou/02.html',
+    active:'TRUE', note:'賃金引き上げとセットの申請が必要',
+    use_cases:'POSレジ導入、券売機・自動精算機導入、厨房・店舗設備の更新、業務用ソフトウェア導入' },
+
+  { id:'8', name:'働き方改革推進支援助成金', type:'助成金', ministry:'厚生労働省',
+    target_industry:'全業種', max_employees:'100', min_years:'0', max_years:'',
+    purposes:'労働環境改善',
+    max_amount:'最大200万円', subsidy_rate:'3/4',
+    deadline:'通年受付',
+    summary:'時間外労働の削減・年次有給休暇の取得促進・勤務間インターバルの導入等に取り組む事業者を支援。',
+    url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000120692.html',
+    active:'TRUE', note:'',
+    use_cases:'勤怠管理システム導入、労務管理ソフト導入、就業規則見直しの専門家費用、研修費用' },
+
+  { id:'9', name:'中小企業省力化投資補助金', type:'補助金', ministry:'経済産業省',
+    target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
+    purposes:'省力化・自動化|設備投資',
+    max_amount:'最大1,500万円', subsidy_rate:'1/2',
+    deadline:'2025年度公募中',
+    summary:'IoT・AI・ロボット等を活用した省力化投資を支援。人手不足解消と生産性向上を目指す中小企業向け。',
+    url:'https://shoryokuka.smrj.go.jp/', active:'TRUE',
+    note:'カタログ掲載製品への導入が対象',
+    use_cases:'清掃ロボット、券売機・自動受付機、配膳ロボット、IoTセンサー機器' },
+
+  { id:'10', name:'創業・スタートアップ支援（自治体）', type:'助成金', ministry:'都道府県・市区町村',
+    target_industry:'全業種', max_employees:'', min_years:'0', max_years:'5',
+    purposes:'創業支援|事業転換・新規事業',
+    max_amount:'最大300万円（自治体により異なる）', subsidy_rate:'',
+    deadline:'自治体により異なる',
+    summary:'創業初期の事業費用を補助。各都道府県・市区町村で内容が異なるため、お住まいの窓口に要確認。',
+    url:'https://j-net21.smrj.go.jp/', active:'TRUE',
+    note:'設立5年以内が対象の自治体が多い',
+    use_cases:'オフィス・店舗の賃借費用、開業時の内装工事、ホームページ制作、名刺・チラシ作成' },
+
+  { id:'11', name:'雇用調整助成金', type:'助成金', ministry:'厚生労働省',
+    target_industry:'全業種', max_employees:'', min_years:'0', max_years:'',
+    purposes:'雇用・人材育成',
+    max_amount:'休業手当の最大9/10', subsidy_rate:'',
+    deadline:'通年受付',
+    summary:'経営困難時に従業員を休業させた場合の休業手当を助成。雇用維持のための緊急対応制度。',
+    url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/pageL07.html',
+    active:'TRUE', note:'売上減少等の経営悪化要件あり',
+    use_cases:'休業手当の補填、雇用維持のための教育訓練実施' },
+
+  { id:'12', name:'DX推進補助金（東京都）', type:'補助金', ministry:'東京都',
+    target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
+    purposes:'IT化・デジタル化',
+    max_amount:'最大750万円', subsidy_rate:'1/2',
+    deadline:'2025年度公募中',
+    summary:'都内中小企業のDX推進を支援。基幹システム刷新・クラウド導入・AI活用等のデジタル化費用を補助。',
+    url:'https://www.tokyo-kosha.or.jp/', active:'TRUE',
+    note:'東京都内に事業所がある事業者限定',
+    use_cases:'基幹システム（販売管理・在庫管理）刷新、クラウドサービス導入、AIチャットボット導入、ECサイト構築' },
+
+  { id:'13', name:'テレワーク導入補助金（東京都）', type:'補助金', ministry:'東京都',
+    target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
+    purposes:'IT化・デジタル化|労働環境改善',
+    max_amount:'最大250万円', subsidy_rate:'最大4/5',
+    deadline:'2025年度公募中',
+    summary:'テレワーク環境整備（PC・タブレット・Web会議ツール等）の費用を補助。都内中小企業が対象。',
+    url:'https://www.shigotozaidan.or.jp/', active:'TRUE',
+    note:'東京都内に事業所がある事業者限定',
+    use_cases:'ノートPC・タブレット購入、Web会議システム導入、VPN環境構築、クラウドストレージ導入' },
+
+  { id:'14', name:'特定求職者雇用開発助成金', type:'助成金', ministry:'厚生労働省',
+    target_industry:'全業種', max_employees:'', min_years:'0', max_years:'',
+    purposes:'雇用・人材育成',
+    max_amount:'最大180万円', subsidy_rate:'',
+    deadline:'通年受付',
+    summary:'高齢者・障害者・母子家庭の母等の就職困難者を雇用した事業者に支給。対象者属性により支給額が異なる。',
+    url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/tokutei_konnan.html',
+    active:'TRUE', note:'対象者の属性により支給額が異なる',
+    use_cases:'高齢者・障害者等の雇用にかかる人件費の補填' },
+
+  { id:'15', name:'地域中小企業応援ファンド（スタートアップ応援型）', type:'補助金', ministry:'中小企業庁',
+    target_industry:'全業種', max_employees:'', min_years:'0', max_years:'3',
+    purposes:'創業支援|事業転換・新規事業',
+    max_amount:'最大300万円', subsidy_rate:'',
+    deadline:'都道府県により異なる',
+    summary:'地域の特性を活かした新事業展開を支援。創業3年以内の若い企業が対象となる場合が多い。',
+    url:'https://j-net21.smrj.go.jp/', active:'TRUE',
+    note:'都道府県・実施機関により内容が異なる',
+    use_cases:'新商品開発費用、ECサイト構築、地域ブランド化のためのデザイン制作' },
+];
+
+// ============================================================
+// 活用目的マスター
+// ============================================================
+const PURPOSES = [
+  'IT化・デジタル化', '設備投資', '販路開拓・集客',
+  '雇用・人材育成', '事業転換・新規事業', '省力化・自動化',
+  '創業支援', '労働環境改善', '研究開発'
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let subsidies = [];
+let currentStep = 1;
+
+// ============================================================
+// 初期化
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  renderPurposes();
+  renderProgress(1);
+  loadData();
+});
+
+async function loadData() {
+  const el = document.getElementById('dataStatus');
+
+  if (SHEET_ID === '13vrbrpslBFhSQVlva9QodmdI2TWBcWyDgPWm4WdxUfo') {
+    subsidies = FALLBACK;
+    el.innerHTML = 'データ: <span class="warn">内蔵データ（初期データ）を使用中 — Sheets連携後に自動更新されます</span>';
+    return;
+  }
+
+  try {
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    const res = await fetch(url);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const text = await res.text();
+    const parsed = parseCSV(text);
+    if (parsed.length === 0) throw new Error('empty');
+    subsidies = parsed;
+    el.innerHTML = `データ: <span class="ok">Googleスプレッドシート（${subsidies.length}件）</span>`;
+  } catch (e) {
+    subsidies = FALLBACK;
+    el.innerHTML = 'データ: <span class="warn">内蔵データを使用中（Sheets接続エラー）</span>';
+  }
+}
+
+// ============================================================
+// CSV パーサー
+// ============================================================
+function parseCSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = parseRow(lines[0]);
+  return lines.slice(1).map(line => {
+    const vals = parseRow(line);
+    const obj = {};
+    headers.forEach((h, i) => { obj[h.trim()] = (vals[i] || '').trim(); });
+    return obj;
+  }).filter(r => r.name);
+}
+
+function parseRow(line) {
+  const res = []; let cur = ''; let inQ = false;
+  for (let i = 0; i < line.length; i++) {
+    const c = line[i];
+    if (c === '"') { if (inQ && line[i+1] === '"') { cur += '"'; i++; } else inQ = !inQ; }
+    else if (c === ',' && !inQ) { res.push(cur); cur = ''; }
+    else cur += c;
+  }
+  res.push(cur);
+  return res;
+}
+
+// ============================================================
+// フィルタロジック
+// ============================================================
+function filter(answers) {
+  return subsidies.filter(s => {
+    if (s.active !== 'TRUE') return false;
+
+    // 業種チェック
+    if (s.target_industry && s.target_industry !== '全業種') {
+      if (!s.target_industry.split('|').includes(answers.industry)) return false;
+    }
+
+    // 従業員数チェック
+    if (s.max_employees) {
+      if (answers.employees > parseInt(s.max_employees)) return false;
+    }
+
+    // 設立年数チェック
+    if (s.min_years !== undefined && s.min_years !== '') {
+      if (answers.years < parseInt(s.min_years)) return false;
+    }
+    if (s.max_years !== undefined && s.max_years !== '') {
+      if (answers.years > parseInt(s.max_years)) return false;
+    }
+
+    // 活用目的チェック（未選択なら全件対象）
+    if (answers.purposes.length > 0 && s.purposes) {
+      const sp = s.purposes.split('|');
+      if (!answers.purposes.some(p => sp.includes(p))) return false;
+    }
+
+    return true;
+  });
+}
+
+function getAnswers() {
+  return {
+    industry:    document.getElementById('industry').value,
+    employees:   parseInt(document.getElementById('employees').value) || 0,
+    capital:     document.getElementById('capital').value,
+    years:       parseInt(document.getElementById('years').value) ?? 99,
+    revenueChange: document.getElementById('revenueChange').value,
+    employment:  document.getElementById('employment').value,
+    purposes:    [...document.querySelectorAll('#purposeGrid input:checked')].map(el => el.value),
+  };
+}
+
+// ============================================================
+// ナビゲーション
+// ============================================================
+function goTo(step) {
+  if (step === 2) {
+    if (!document.getElementById('industry').value)   { alert('業種を選択してください'); return; }
+    if (!document.getElementById('employees').value)  { alert('従業員数を選択してください'); return; }
+    if (!document.getElementById('capital').value)    { alert('資本金を選択してください'); return; }
+  }
+  if (step === 3) {
+    if (!document.getElementById('years').value)       { alert('設立年数を選択してください'); return; }
+    if (!document.getElementById('revenueChange').value) { alert('売上変化を選択してください'); return; }
+    if (!document.getElementById('employment').value)  { alert('雇用形態を選択してください'); return; }
+  }
+
+  currentStep = step;
+  document.querySelectorAll('.step-pane').forEach(el => el.style.display = 'none');
+  document.getElementById(`step${step}`).style.display = '';
+  renderProgress(step <= 3 ? step : 3);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// 結果表示
+// ============================================================
+function showResults() {
+  const answers = getAnswers();
+  let matched = filter(answers);
+
+  // 補助金を先に、助成金を後に表示
+  matched.sort((a, b) => {
+    if (a.type === b.type) return 0;
+    return a.type === '補助金' ? -1 : 1;
+  });
+
+  document.querySelectorAll('.step-pane').forEach(el => el.style.display = 'none');
+  document.getElementById('step4').style.display = '';
+  renderProgress(3); // 最終ステップ完了
+
+  document.getElementById('resultBanner').innerHTML = `
+    <div class="result-banner">
+      <div><span class="result-count">${matched.length}</span><span class="result-unit"> 件</span></div>
+      <div class="result-note">申請できる可能性のある補助金・助成金が見つかりました</div>
+    </div>
+  `;
+
+  if (matched.length === 0) {
+    document.getElementById('resultList').innerHTML =
+      '<div class="card no-results"><p>条件に合う補助金・助成金が見つかりませんでした。</p><p style="margin-top:0.5rem;font-size:0.83rem">活用目的を変えて再診断をお試しください。</p></div>';
+    return;
+  }
+
+  document.getElementById('resultList').innerHTML = matched.map(s => `
+    <div class="subsidy-card ${s.type === '助成金' ? 'joseikin' : ''}">
+      <div class="subsidy-top">
+        <div class="subsidy-name">${esc(s.name)}</div>
+        <span class="badge badge-${s.type}">${s.type}</span>
+      </div>
+      <div class="subsidy-meta">
+        <div class="meta-item">
+          <div class="meta-label">最大補助額</div>
+          <div class="meta-value">${esc(s.max_amount) || '要確認'}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">補助率</div>
+          <div class="meta-value">${esc(s.subsidy_rate) || '要確認'}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">主管</div>
+          <div class="meta-value">${esc(s.ministry)}</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">申請状況</div>
+          <div class="meta-value">${esc(s.deadline) || '要確認'}</div>
+        </div>
+      </div>
+      <div class="subsidy-summary">${esc(s.summary)}</div>
+      ${s.use_cases ? `<div class="subsidy-usecases"><span class="usecases-label">こんな用途に使える例：</span>${esc(s.use_cases)}</div>` : ''}
+      ${s.note ? `<div class="subsidy-note">⚠ ${esc(s.note)}</div>` : ''}
+      <a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer" class="subsidy-link">公式サイトを確認 →</a>
+    </div>
+  `).join('');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// UI ヘルパー
+// ============================================================
+function renderPurposes() {
+  document.getElementById('purposeGrid').innerHTML = PURPOSES.map(p => `
+    <label class="checkbox-item" id="ci_${p}">
+      <input type="checkbox" value="${p}" onchange="document.getElementById('ci_${p}').classList.toggle('checked', this.checked)">
+      <span>${p}</span>
+    </label>
+  `).join('');
+}
+
+function renderProgress(step) {
+  const total = 3;
+  let html = '';
+  for (let i = 1; i <= total; i++) {
+    const cls = i < step ? 'done' : i === step ? 'active' : '';
+    html += `<div class="step-dot ${cls}">${i < step ? '✓' : i}</div>`;
+    if (i < total) html += `<div class="step-line ${i < step ? 'done' : ''}"></div>`;
+  }
+  document.getElementById('progress').innerHTML = html;
+}
+
+function esc(str) {
+  return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+</script>
+
+</body>
+</html>
