@@ -206,6 +206,13 @@
       margin-bottom: 0.6rem; line-height: 1.6;
     }
     .usecases-label { font-weight: 700; margin-right: 0.3rem; }
+    .subsidy-docs {
+      font-size: 0.8rem; color: #44337a;
+      background: #faf5ff; border: 1px solid #e9d8fd;
+      padding: 0.4rem 0.6rem; border-radius: 5px;
+      margin-bottom: 0.6rem; line-height: 1.6;
+    }
+    .docs-label { font-weight: 700; margin-right: 0.3rem; }
     .subsidy-note {
       font-size: 0.78rem; color: #c05621;
       background: #fffaf0; border: 1px solid #fbd38d;
@@ -456,7 +463,8 @@ const FALLBACK = [
     summary:'小規模事業者の販路開拓や業務効率化を支援。通常枠は最大50万円、特別枠・成長枠は最大250万円。',
     url:'https://s23.jizokukahojokin.info/', active:'TRUE',
     note:'サービス業は5名以下・製造業等は20名以下が対象',
-    use_cases:'ホームページ制作・リニューアル、ECサイト構築、チラシ・パンフレット作成、店舗看板・改装、展示会出展費用' },
+    use_cases:'ホームページ制作・リニューアル、ECサイト構築、チラシ・パンフレット作成、店舗看板・改装、展示会出展費用',
+    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近の確定申告書・決算書、事業支援計画書（商工会・商工会議所発行）、補助事業計画書、見積書' },
 
   { id:'2', name:'IT導入補助金2025', type:'補助金', ministry:'経済産業省',
     target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
@@ -466,7 +474,8 @@ const FALLBACK = [
     summary:'ITツール・ソフトウェアの導入費用を補助。業務効率化・デジタル化・セキュリティ対策を推進する中小企業を支援。',
     url:'https://www.it-hojo.jp/', active:'TRUE',
     note:'IT導入支援事業者と連携して申請が必要',
-    use_cases:'会計ソフト導入、受発注・在庫管理システム、勤怠管理システム、ECサイト構築、セキュリティ対策ソフト' },
+    use_cases:'会計ソフト導入、受発注・在庫管理システム、勤怠管理システム、ECサイト構築、セキュリティ対策ソフト',
+    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近の確定申告書・決算書、gBizIDプライムの取得、IT導入支援事業者との共同申請書類、導入ツールの見積書' },
 
   { id:'3', name:'ものづくり補助金（第20次）', type:'補助金', ministry:'中小企業庁',
     target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
@@ -475,7 +484,8 @@ const FALLBACK = [
     deadline:'2025年度公募中',
     summary:'革新的な製品・サービス開発や生産プロセスの改善を支援。サービス業の革新的なサービス開発も対象。',
     url:'https://portal.monodukuri-hojo.jp/', active:'TRUE', note:'',
-    use_cases:'工作機械・生産設備の購入、試作品開発、新サービス用システム開発、専用ソフトウェア開発' },
+    use_cases:'工作機械・生産設備の購入、試作品開発、新サービス用システム開発、専用ソフトウェア開発',
+    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近2期分の決算書、事業計画書（賃上げ計画含む）、見積書（原則2社以上）、gBizIDプライムの取得' },
 
   { id:'4', name:'事業再構築補助金', type:'補助金', ministry:'中小企業庁',
     target_industry:'全業種', max_employees:'2000', min_years:'0', max_years:'',
@@ -485,7 +495,8 @@ const FALLBACK = [
     summary:'新分野展開・業態転換・業種転換等を支援。コロナ影響からの回復・成長を目指す事業者が対象。',
     url:'https://jigyou-saikouchiku.go.jp/', active:'TRUE',
     note:'売上高の10%以上減少等の要件あり',
-    use_cases:'新規事業用設備購入、店舗改装・新規出店、新業態向けシステム開発、ECサイト新設' },
+    use_cases:'新規事業用設備購入、店舗改装・新規出店、新業態向けシステム開発、ECサイト新設',
+    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近2〜3期分の決算書、事業計画書、認定経営革新等支援機関の確認書、売上高減少を示す書類、金融機関による確認書（大型案件）' },
 
   { id:'5', name:'キャリアアップ助成金（正社員化コース）', type:'助成金', ministry:'厚生労働省',
     target_industry:'全業種', max_employees:'', min_years:'0', max_years:'',
@@ -495,7 +506,8 @@ const FALLBACK = [
     summary:'有期雇用労働者・パート等を正規雇用に転換した場合に支給。非正規から正規への転換を後押し。',
     url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/part_haken/jigyounushi/career.html',
     active:'TRUE', note:'非正規から正規転換が要件',
-    use_cases:'パート・アルバイトの正社員化、契約社員の正規雇用転換' },
+    use_cases:'パート・アルバイトの正社員化、契約社員の正規雇用転換',
+    required_documents:'※要確認: キャリアアップ計画書（事前提出）、就業規則・労働協約、転換前後の雇用契約書、賃金台帳、出勤簿' },
 
   { id:'6', name:'人材開発支援助成金', type:'助成金', ministry:'厚生労働省',
     target_industry:'全業種', max_employees:'', min_years:'0', max_years:'',
@@ -505,7 +517,8 @@ const FALLBACK = [
     summary:'労働者への職業訓練・研修の実施に対して、訓練費用と訓練中の賃金の一部を助成。',
     url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/d01-1.html',
     active:'TRUE', note:'',
-    use_cases:'社員研修・スキルアップ講座、資格取得支援、新人研修プログラム、外部セミナー受講費用' },
+    use_cases:'社員研修・スキルアップ講座、資格取得支援、新人研修プログラム、外部セミナー受講費用',
+    required_documents:'※要確認: 訓練実施計画届（事前提出）、就業規則、訓練カリキュラム、訓練に要する経費の見積書・領収書、賃金台帳' },
 
   { id:'7', name:'業務改善助成金', type:'助成金', ministry:'厚生労働省',
     target_industry:'全業種', max_employees:'100', min_years:'0', max_years:'',
@@ -515,7 +528,8 @@ const FALLBACK = [
     summary:'最低賃金を引き上げた事業者に対し、生産性向上のための設備投資等の費用を助成。',
     url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/zigyonushi/shienjigyou/02.html',
     active:'TRUE', note:'賃金引き上げとセットの申請が必要',
-    use_cases:'POSレジ導入、券売機・自動精算機導入、厨房・店舗設備の更新、業務用ソフトウェア導入' },
+    use_cases:'POSレジ導入、券売機・自動精算機導入、厨房・店舗設備の更新、業務用ソフトウェア導入',
+    required_documents:'※要確認: 賃金引上げ計画書、就業規則（賃金規定）、設備導入の見積書、事業実施計画書、労働者名簿' },
 
   { id:'8', name:'働き方改革推進支援助成金', type:'助成金', ministry:'厚生労働省',
     target_industry:'全業種', max_employees:'100', min_years:'0', max_years:'',
@@ -525,7 +539,8 @@ const FALLBACK = [
     summary:'時間外労働の削減・年次有給休暇の取得促進・勤務間インターバルの導入等に取り組む事業者を支援。',
     url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000120692.html',
     active:'TRUE', note:'',
-    use_cases:'勤怠管理システム導入、労務管理ソフト導入、就業規則見直しの専門家費用、研修費用' },
+    use_cases:'勤怠管理システム導入、労務管理ソフト導入、就業規則見直しの専門家費用、研修費用',
+    required_documents:'※要確認: 36協定届の写し、就業規則、年次有給休暇取得状況の分かる書類、取組内容の実施計画書、経費の見積書' },
 
   { id:'9', name:'中小企業省力化投資補助金', type:'補助金', ministry:'経済産業省',
     target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
@@ -535,7 +550,8 @@ const FALLBACK = [
     summary:'IoT・AI・ロボット等を活用した省力化投資を支援。人手不足解消と生産性向上を目指す中小企業向け。',
     url:'https://shoryokuka.smrj.go.jp/', active:'TRUE',
     note:'カタログ掲載製品への導入が対象',
-    use_cases:'清掃ロボット、券売機・自動受付機、配膳ロボット、IoTセンサー機器' },
+    use_cases:'清掃ロボット、券売機・自動受付機、配膳ロボット、IoTセンサー機器',
+    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近の決算書、賃上げ計画の表明書、カタログ掲載製品の導入見積書、gBizIDプライムの取得' },
 
   { id:'10', name:'創業・スタートアップ支援（自治体）', type:'助成金', ministry:'都道府県・市区町村',
     target_industry:'全業種', max_employees:'', min_years:'0', max_years:'5',
@@ -545,7 +561,8 @@ const FALLBACK = [
     summary:'創業初期の事業費用を補助。各都道府県・市区町村で内容が異なるため、お住まいの窓口に要確認。',
     url:'https://j-net21.smrj.go.jp/', active:'TRUE',
     note:'設立5年以内が対象の自治体が多い',
-    use_cases:'オフィス・店舗の賃借費用、開業時の内装工事、ホームページ制作、名刺・チラシ作成' },
+    use_cases:'オフィス・店舗の賃借費用、開業時の内装工事、ホームページ制作、名刺・チラシ作成',
+    required_documents:'※要確認: 創業計画書、履歴事項全部証明書（設立後）、本人確認書類、資金計画・見積書、自治体所定の申請様式（自治体ごとに異なる）' },
 
   { id:'11', name:'雇用調整助成金', type:'助成金', ministry:'厚生労働省',
     target_industry:'全業種', max_employees:'', min_years:'0', max_years:'',
@@ -555,7 +572,8 @@ const FALLBACK = [
     summary:'経営困難時に従業員を休業させた場合の休業手当を助成。雇用維持のための緊急対応制度。',
     url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/pageL07.html',
     active:'TRUE', note:'売上減少等の経営悪化要件あり',
-    use_cases:'休業手当の補填、雇用維持のための教育訓練実施' },
+    use_cases:'休業手当の補填、雇用維持のための教育訓練実施',
+    required_documents:'※要確認: 休業等実施計画届（事前提出）、売上高等の生産指標が分かる書類、休業協定書、出勤簿・賃金台帳、教育訓練の実施記録' },
 
   { id:'12', name:'DX推進補助金（東京都）', type:'補助金', ministry:'東京都',
     target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
@@ -565,7 +583,8 @@ const FALLBACK = [
     summary:'都内中小企業のDX推進を支援。基幹システム刷新・クラウド導入・AI活用等のデジタル化費用を補助。',
     url:'https://www.tokyo-kosha.or.jp/', active:'TRUE',
     note:'東京都内に事業所がある事業者限定',
-    use_cases:'基幹システム（販売管理・在庫管理）刷新、クラウドサービス導入、AIチャットボット導入、ECサイト構築' },
+    use_cases:'基幹システム（販売管理・在庫管理）刷新、クラウドサービス導入、AIチャットボット導入、ECサイト構築',
+    required_documents:'※要確認: 履歴事項全部証明書、都内事業所を示す書類、直近の決算書、DX推進の事業計画書、導入システムの見積書' },
 
   { id:'13', name:'テレワーク導入補助金（東京都）', type:'補助金', ministry:'東京都',
     target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
@@ -575,7 +594,8 @@ const FALLBACK = [
     summary:'テレワーク環境整備（PC・タブレット・Web会議ツール等）の費用を補助。都内中小企業が対象。',
     url:'https://www.shigotozaidan.or.jp/', active:'TRUE',
     note:'東京都内に事業所がある事業者限定',
-    use_cases:'ノートPC・タブレット購入、Web会議システム導入、VPN環境構築、クラウドストレージ導入' },
+    use_cases:'ノートPC・タブレット購入、Web会議システム導入、VPN環境構築、クラウドストレージ導入',
+    required_documents:'※要確認: 履歴事項全部証明書、都内事業所を示す書類、直近の決算書、テレワーク導入計画書、導入機器・サービスの見積書' },
 
   { id:'14', name:'特定求職者雇用開発助成金', type:'助成金', ministry:'厚生労働省',
     target_industry:'全業種', max_employees:'', min_years:'0', max_years:'',
@@ -585,7 +605,8 @@ const FALLBACK = [
     summary:'高齢者・障害者・母子家庭の母等の就職困難者を雇用した事業者に支給。対象者属性により支給額が異なる。',
     url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/tokutei_konnan.html',
     active:'TRUE', note:'対象者の属性により支給額が異なる',
-    use_cases:'高齢者・障害者等の雇用にかかる人件費の補填' },
+    use_cases:'高齢者・障害者等の雇用にかかる人件費の補填',
+    required_documents:'※要確認: 雇入れに係るハローワーク等の紹介状、対象者の雇用契約書、賃金台帳、出勤簿、対象者属性を証明する書類' },
 
   { id:'15', name:'地域中小企業応援ファンド（スタートアップ応援型）', type:'補助金', ministry:'中小企業庁',
     target_industry:'全業種', max_employees:'', min_years:'0', max_years:'3',
@@ -595,7 +616,8 @@ const FALLBACK = [
     summary:'地域の特性を活かした新事業展開を支援。創業3年以内の若い企業が対象となる場合が多い。',
     url:'https://j-net21.smrj.go.jp/', active:'TRUE',
     note:'都道府県・実施機関により内容が異なる',
-    use_cases:'新商品開発費用、ECサイト構築、地域ブランド化のためのデザイン制作' },
+    use_cases:'新商品開発費用、ECサイト構築、地域ブランド化のためのデザイン制作',
+    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、事業計画書（自治体所定様式）、見積書、設立年数を示す書類' },
 ];
 
 // ============================================================
@@ -798,6 +820,7 @@ function showResults() {
       </div>
       <div class="subsidy-summary">${esc(s.summary)}</div>
       ${s.use_cases ? `<div class="subsidy-usecases"><span class="usecases-label">こんな用途に使える例：</span>${esc(s.use_cases)}</div>` : ''}
+      ${s.required_documents ? `<div class="subsidy-docs"><span class="docs-label">必要書類の目安：</span>${esc(s.required_documents)}</div>` : ''}
       ${s.note ? `<div class="subsidy-note">⚠ ${esc(s.note)}</div>` : ''}
       <a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer" class="subsidy-link">公式サイトを確認 →</a>
     </div>
