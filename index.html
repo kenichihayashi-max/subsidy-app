@@ -102,6 +102,18 @@
       padding-right: 2.5rem;
     }
     select:focus { outline: none; border-color: #1a56db; }
+    input[type="text"], textarea {
+      width: 100%;
+      padding: 0.65rem 1rem;
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      background: white;
+      font-family: inherit;
+      transition: border-color 0.2s;
+      resize: vertical;
+    }
+    input[type="text"]:focus, textarea:focus { outline: none; border-color: #1a56db; }
 
     /* ── チェックボックスグリッド ── */
     .checkbox-grid {
@@ -371,8 +383,53 @@
       ※ 本診断は一般的な要件をもとにした参考情報です。実際の申請にあたっては各補助金・助成金の公式サイトや
       担当窓口で最新情報を必ずご確認ください。要件・締切・金額は変更される場合があります。
     </div>
-    <div style="text-align:center;margin-top:1.25rem;">
+    <div style="text-align:center;margin-top:1.25rem;display:flex;justify-content:center;gap:0.75rem;flex-wrap:wrap;">
       <button class="btn btn-secondary" onclick="goTo(1)">最初からやり直す</button>
+      <button class="btn btn-primary" onclick="goTo(5)">📄 申請書類作成用プロフィールを入力する</button>
+    </div>
+  </div>
+
+  <!-- ===== STEP 5: 申請書類作成用プロフィール ===== -->
+  <div id="step5" class="step-pane" style="display:none">
+    <div class="card">
+      <div class="card-title">申請書類作成用 自社プロフィール</div>
+      <p style="font-size:0.83rem;color:#718096;margin-bottom:1.25rem;line-height:1.6;">
+        入力した内容はこのブラウザ内でのみ処理され、外部には送信されません。
+        入力後「プロフィールをダウンロード」でJSONファイルを保存し、
+        <code style="background:#f0f4ff;padding:0.1rem 0.4rem;border-radius:4px;">scripts/fill_application_form.py</code>
+        に渡すと、補助金の公式申請フォーマット（Excel/Word）へ自動入力できます。
+      </p>
+
+      <div class="card-title" style="font-size:0.95rem;margin-top:0;">基本情報</div>
+      <div class="form-group"><label class="field-label">法人名・屋号</label><input type="text" id="p_name" placeholder="例: 株式会社〇〇"></div>
+      <div class="form-group"><label class="field-label">代表者名</label><input type="text" id="p_rep" placeholder="例: 山田 太郎"></div>
+      <div class="form-group"><label class="field-label">本店所在地</label><input type="text" id="p_address" placeholder="例: 東京都〇〇区..."></div>
+      <div class="form-group"><label class="field-label">設立年月日</label><input type="text" id="p_founded" placeholder="例: 2024年4月1日"></div>
+      <div class="form-group"><label class="field-label">資本金</label><input type="text" id="p_capital" placeholder="例: 3,000,000円"></div>
+      <div class="form-group"><label class="field-label">従業員数</label><input type="text" id="p_employees" placeholder="例: 5名"></div>
+      <div class="form-group"><label class="field-label">業種・主たる事業内容</label><input type="text" id="p_industry" placeholder="例: 和洋菓子の製造小売業"></div>
+      <div class="form-group"><label class="field-label">連絡先（電話・メール）</label><input type="text" id="p_contact" placeholder="例: 03-0000-0000 / info@example.com"></div>
+
+      <div class="card-title" style="font-size:0.95rem;">財務情報（決算書より）</div>
+      <div class="form-group"><label class="field-label">直近売上高</label><input type="text" id="p_revenue" placeholder="例: 244,933,949円"></div>
+      <div class="form-group"><label class="field-label">直近営業利益</label><input type="text" id="p_op_income" placeholder="例: ▲23,091,471円"></div>
+      <div class="form-group"><label class="field-label">純資産（自己資本）</label><input type="text" id="p_equity" placeholder="例: 2,400,000円"></div>
+      <div class="form-group"><label class="field-label">借入金残高</label><input type="text" id="p_debt" placeholder="例: 357,000,000円"></div>
+
+      <div class="card-title" style="font-size:0.95rem;">事業計画（自由記述）</div>
+      <div class="form-group"><label class="field-label">事業概要</label><textarea id="p_overview" rows="3" placeholder="どんな事業を行っているか"></textarea></div>
+      <div class="form-group"><label class="field-label">現状の課題</label><textarea id="p_issues" rows="3" placeholder="DD報告書・ヒアリング記録の内容を要約して貼り付けてもOK"></textarea></div>
+      <div class="form-group"><label class="field-label">資金の使途・実施内容</label><textarea id="p_use_of_funds" rows="3" placeholder="補助金・助成金を何に使うか"></textarea></div>
+      <div class="form-group"><label class="field-label">期待される効果・数値目標</label><textarea id="p_expected_effect" rows="3" placeholder="売上〇%増加、コスト〇円削減 等"></textarea></div>
+
+      <div class="btn-group">
+        <button class="btn btn-secondary" onclick="goTo(4)">← 結果へ戻る</button>
+        <div style="display:flex;gap:0.5rem;">
+          <button class="btn btn-secondary" onclick="document.getElementById('profileFileInput').click()">📂 読み込む</button>
+          <button class="btn btn-primary" onclick="downloadProfile()">⬇ プロフィールをダウンロード</button>
+        </div>
+      </div>
+      <input type="file" id="profileFileInput" accept="application/json" style="display:none" onchange="loadProfileFile(this.files[0])">
     </div>
   </div>
 
@@ -775,8 +832,55 @@ function renderProgress(step) {
 function esc(str) {
   return (str || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
+
+// ============================================================
+// 申請書類作成用プロフィール（ステップ5）
+// ============================================================
+const PROFILE_FIELDS = [
+  'p_name', 'p_rep', 'p_address', 'p_founded', 'p_capital', 'p_employees',
+  'p_industry', 'p_contact',
+  'p_revenue', 'p_op_income', 'p_equity', 'p_debt',
+  'p_overview', 'p_issues', 'p_use_of_funds', 'p_expected_effect',
+];
+
+function collectProfile() {
+  const profile = {};
+  PROFILE_FIELDS.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) profile[id] = el.value;
+  });
+  return profile;
+}
+
+function downloadProfile() {
+  const profile = collectProfile();
+  const blob = new Blob([JSON.stringify(profile, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  const fileName = (profile.p_name || 'company').replace(/[\\/:*?"<>|]/g, '') + '_profile.json';
+  a.href = url;
+  a.download = fileName;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+function loadProfileFile(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const profile = JSON.parse(e.target.result);
+      PROFILE_FIELDS.forEach(id => {
+        const el = document.getElementById(id);
+        if (el && profile[id] !== undefined) el.value = profile[id];
+      });
+    } catch (err) {
+      alert('JSONファイルの読み込みに失敗しました');
+    }
+  };
+  reader.readAsText(file, 'utf-8');
+}
 </script>
 
 </body>
 </html>
-<!-- redeploy trigger -->
