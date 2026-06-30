@@ -800,7 +800,7 @@ function showResults() {
       <div class="subsidy-top">
         <div class="subsidy-name">${esc(s.name)}</div>
         <span class="badge badge-${s.type}">${s.type}</span>
-        ${s.template_available === 'TRUE' ? `<span class="badge badge-template">📄 自動入力対応</span>` : ''}
+        ${s.template_available === 'TRUE' ? `<span class="badge badge-template">📄 記入用ファイルあり</span>` : ''}
       </div>
       <div class="subsidy-meta">
         <div class="meta-item">
@@ -828,6 +828,7 @@ function showResults() {
       <div class="subsidy-summary">${esc(s.summary)}</div>
       ${s.use_cases ? `<div class="subsidy-usecases"><span class="usecases-label">こんな用途に使える例：</span>${esc(s.use_cases)}</div>` : ''}
       ${s.required_documents ? `<div class="subsidy-docs"><span class="docs-label">必要書類の目安：</span>${esc(s.required_documents)}</div>` : ''}
+      ${s.template_available === 'TRUE' && s.application_method === 'オンライン申請ポータル' ? `<div class="subsidy-note">⚠ この補助金はオンライン申請ポータルでの手続きが必要です。「記入用ファイルあり」は申請の一部で使う添付書類が見つかったという意味で、これだけで申請が完結するわけではありません。</div>` : ''}
       ${s.note ? `<div class="subsidy-note">⚠ ${esc(s.note)}</div>` : ''}
       <a href="${esc(s.url)}" target="_blank" rel="noopener noreferrer" class="subsidy-link">公式サイトを確認 →</a>
     </div>
