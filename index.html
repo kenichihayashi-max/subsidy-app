@@ -274,6 +274,13 @@
       <div class="card-title">STEP 1 &nbsp;企業の基本情報</div>
 
       <div class="form-group">
+        <label class="field-label">所在地（事業所のある都道府県）</label>
+        <select id="prefecture">
+          <option value="">選択してください</option>
+        </select>
+      </div>
+
+      <div class="form-group">
         <label class="field-label">業種</label>
         <select id="industry">
           <option value="">選択してください</option>
@@ -465,7 +472,7 @@ const FALLBACK = [
     url:'https://s23.jizokukahojokin.info/', active:'TRUE',
     note:'サービス業は5名以下・製造業等は20名以下が対象',
     use_cases:'ホームページ制作・リニューアル、ECサイト構築、チラシ・パンフレット作成、店舗看板・改装、展示会出展費用',
-    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近の確定申告書・決算書、事業支援計画書（商工会・商工会議所発行）、補助事業計画書、見積書', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近の確定申告書・決算書、事業支援計画書（商工会・商工会議所発行）、補助事業計画書、見積書', application_method:'', template_available:'', template_urls:'', target_area:'全国' },
 
   { id:'2', name:'IT導入補助金2025', type:'補助金', ministry:'経済産業省',
     target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
@@ -476,7 +483,7 @@ const FALLBACK = [
     url:'https://www.it-hojo.jp/', active:'TRUE',
     note:'IT導入支援事業者と連携して申請が必要',
     use_cases:'会計ソフト導入、受発注・在庫管理システム、勤怠管理システム、ECサイト構築、セキュリティ対策ソフト',
-    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近の確定申告書・決算書、gBizIDプライムの取得、IT導入支援事業者との共同申請書類、導入ツールの見積書', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近の確定申告書・決算書、gBizIDプライムの取得、IT導入支援事業者との共同申請書類、導入ツールの見積書', application_method:'', template_available:'', template_urls:'', target_area:'全国' },
 
   { id:'3', name:'ものづくり補助金（第20次）', type:'補助金', ministry:'中小企業庁',
     target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
@@ -486,7 +493,7 @@ const FALLBACK = [
     summary:'革新的な製品・サービス開発や生産プロセスの改善を支援。サービス業の革新的なサービス開発も対象。',
     url:'https://portal.monodukuri-hojo.jp/', active:'TRUE', note:'',
     use_cases:'工作機械・生産設備の購入、試作品開発、新サービス用システム開発、専用ソフトウェア開発',
-    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近2期分の決算書、事業計画書（賃上げ計画含む）、見積書（原則2社以上）、gBizIDプライムの取得', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近2期分の決算書、事業計画書（賃上げ計画含む）、見積書（原則2社以上）、gBizIDプライムの取得', application_method:'', template_available:'', template_urls:'', target_area:'全国' },
 
   { id:'4', name:'事業再構築補助金', type:'補助金', ministry:'中小企業庁',
     target_industry:'全業種', max_employees:'2000', min_years:'0', max_years:'',
@@ -497,7 +504,7 @@ const FALLBACK = [
     url:'https://jigyou-saikouchiku.go.jp/', active:'TRUE',
     note:'売上高の10%以上減少等の要件あり',
     use_cases:'新規事業用設備購入、店舗改装・新規出店、新業態向けシステム開発、ECサイト新設',
-    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近2〜3期分の決算書、事業計画書、認定経営革新等支援機関の確認書、売上高減少を示す書類、金融機関による確認書（大型案件）', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近2〜3期分の決算書、事業計画書、認定経営革新等支援機関の確認書、売上高減少を示す書類、金融機関による確認書（大型案件）', application_method:'', template_available:'', template_urls:'', target_area:'全国' },
 
   { id:'5', name:'キャリアアップ助成金（正社員化コース）', type:'助成金', ministry:'厚生労働省',
     target_industry:'全業種', max_employees:'', min_years:'0', max_years:'',
@@ -508,7 +515,7 @@ const FALLBACK = [
     url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/part_haken/jigyounushi/career.html',
     active:'TRUE', note:'非正規から正規転換が要件',
     use_cases:'パート・アルバイトの正社員化、契約社員の正規雇用転換',
-    required_documents:'※要確認: キャリアアップ計画書（事前提出）、就業規則・労働協約、転換前後の雇用契約書、賃金台帳、出勤簿', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: キャリアアップ計画書（事前提出）、就業規則・労働協約、転換前後の雇用契約書、賃金台帳、出勤簿', application_method:'', template_available:'', template_urls:'', target_area:'全国' },
 
   { id:'6', name:'人材開発支援助成金', type:'助成金', ministry:'厚生労働省',
     target_industry:'全業種', max_employees:'', min_years:'0', max_years:'',
@@ -519,7 +526,7 @@ const FALLBACK = [
     url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/d01-1.html',
     active:'TRUE', note:'',
     use_cases:'社員研修・スキルアップ講座、資格取得支援、新人研修プログラム、外部セミナー受講費用',
-    required_documents:'※要確認: 訓練実施計画届（事前提出）、就業規則、訓練カリキュラム、訓練に要する経費の見積書・領収書、賃金台帳', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 訓練実施計画届（事前提出）、就業規則、訓練カリキュラム、訓練に要する経費の見積書・領収書、賃金台帳', application_method:'', template_available:'', template_urls:'', target_area:'全国' },
 
   { id:'7', name:'業務改善助成金', type:'助成金', ministry:'厚生労働省',
     target_industry:'全業種', max_employees:'100', min_years:'0', max_years:'',
@@ -530,7 +537,7 @@ const FALLBACK = [
     url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/roudoukijun/zigyonushi/shienjigyou/02.html',
     active:'TRUE', note:'賃金引き上げとセットの申請が必要',
     use_cases:'POSレジ導入、券売機・自動精算機導入、厨房・店舗設備の更新、業務用ソフトウェア導入',
-    required_documents:'※要確認: 賃金引上げ計画書、就業規則（賃金規定）、設備導入の見積書、事業実施計画書、労働者名簿', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 賃金引上げ計画書、就業規則（賃金規定）、設備導入の見積書、事業実施計画書、労働者名簿', application_method:'', template_available:'', template_urls:'', target_area:'全国' },
 
   { id:'8', name:'働き方改革推進支援助成金', type:'助成金', ministry:'厚生労働省',
     target_industry:'全業種', max_employees:'100', min_years:'0', max_years:'',
@@ -541,7 +548,7 @@ const FALLBACK = [
     url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/0000120692.html',
     active:'TRUE', note:'',
     use_cases:'勤怠管理システム導入、労務管理ソフト導入、就業規則見直しの専門家費用、研修費用',
-    required_documents:'※要確認: 36協定届の写し、就業規則、年次有給休暇取得状況の分かる書類、取組内容の実施計画書、経費の見積書', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 36協定届の写し、就業規則、年次有給休暇取得状況の分かる書類、取組内容の実施計画書、経費の見積書', application_method:'', template_available:'', template_urls:'', target_area:'全国' },
 
   { id:'9', name:'中小企業省力化投資補助金', type:'補助金', ministry:'経済産業省',
     target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
@@ -552,7 +559,7 @@ const FALLBACK = [
     url:'https://shoryokuka.smrj.go.jp/', active:'TRUE',
     note:'カタログ掲載製品への導入が対象',
     use_cases:'清掃ロボット、券売機・自動受付機、配膳ロボット、IoTセンサー機器',
-    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近の決算書、賃上げ計画の表明書、カタログ掲載製品の導入見積書、gBizIDプライムの取得', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、直近の決算書、賃上げ計画の表明書、カタログ掲載製品の導入見積書、gBizIDプライムの取得', application_method:'', template_available:'', template_urls:'', target_area:'全国' },
 
   { id:'10', name:'創業・スタートアップ支援（自治体）', type:'助成金', ministry:'都道府県・市区町村',
     target_industry:'全業種', max_employees:'', min_years:'0', max_years:'5',
@@ -563,7 +570,7 @@ const FALLBACK = [
     url:'https://j-net21.smrj.go.jp/', active:'TRUE',
     note:'設立5年以内が対象の自治体が多い',
     use_cases:'オフィス・店舗の賃借費用、開業時の内装工事、ホームページ制作、名刺・チラシ作成',
-    required_documents:'※要確認: 創業計画書、履歴事項全部証明書（設立後）、本人確認書類、資金計画・見積書、自治体所定の申請様式（自治体ごとに異なる）', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 創業計画書、履歴事項全部証明書（設立後）、本人確認書類、資金計画・見積書、自治体所定の申請様式（自治体ごとに異なる）', application_method:'', template_available:'', template_urls:'', target_area:'全国' },
 
   { id:'11', name:'雇用調整助成金', type:'助成金', ministry:'厚生労働省',
     target_industry:'全業種', max_employees:'', min_years:'0', max_years:'',
@@ -574,7 +581,7 @@ const FALLBACK = [
     url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/pageL07.html',
     active:'TRUE', note:'売上減少等の経営悪化要件あり',
     use_cases:'休業手当の補填、雇用維持のための教育訓練実施',
-    required_documents:'※要確認: 休業等実施計画届（事前提出）、売上高等の生産指標が分かる書類、休業協定書、出勤簿・賃金台帳、教育訓練の実施記録', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 休業等実施計画届（事前提出）、売上高等の生産指標が分かる書類、休業協定書、出勤簿・賃金台帳、教育訓練の実施記録', application_method:'', template_available:'', template_urls:'', target_area:'全国' },
 
   { id:'12', name:'DX推進補助金（東京都）', type:'補助金', ministry:'東京都',
     target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
@@ -585,7 +592,7 @@ const FALLBACK = [
     url:'https://www.tokyo-kosha.or.jp/', active:'TRUE',
     note:'東京都内に事業所がある事業者限定',
     use_cases:'基幹システム（販売管理・在庫管理）刷新、クラウドサービス導入、AIチャットボット導入、ECサイト構築',
-    required_documents:'※要確認: 履歴事項全部証明書、都内事業所を示す書類、直近の決算書、DX推進の事業計画書、導入システムの見積書', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 履歴事項全部証明書、都内事業所を示す書類、直近の決算書、DX推進の事業計画書、導入システムの見積書', application_method:'', template_available:'', template_urls:'', target_area:'東京都' },
 
   { id:'13', name:'テレワーク導入補助金（東京都）', type:'補助金', ministry:'東京都',
     target_industry:'全業種', max_employees:'300', min_years:'0', max_years:'',
@@ -596,7 +603,7 @@ const FALLBACK = [
     url:'https://www.shigotozaidan.or.jp/', active:'TRUE',
     note:'東京都内に事業所がある事業者限定',
     use_cases:'ノートPC・タブレット購入、Web会議システム導入、VPN環境構築、クラウドストレージ導入',
-    required_documents:'※要確認: 履歴事項全部証明書、都内事業所を示す書類、直近の決算書、テレワーク導入計画書、導入機器・サービスの見積書', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 履歴事項全部証明書、都内事業所を示す書類、直近の決算書、テレワーク導入計画書、導入機器・サービスの見積書', application_method:'', template_available:'', template_urls:'', target_area:'東京都' },
 
   { id:'14', name:'特定求職者雇用開発助成金', type:'助成金', ministry:'厚生労働省',
     target_industry:'全業種', max_employees:'', min_years:'0', max_years:'',
@@ -607,7 +614,7 @@ const FALLBACK = [
     url:'https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/koyou_roudou/koyou/kyufukin/tokutei_konnan.html',
     active:'TRUE', note:'対象者の属性により支給額が異なる',
     use_cases:'高齢者・障害者等の雇用にかかる人件費の補填',
-    required_documents:'※要確認: 雇入れに係るハローワーク等の紹介状、対象者の雇用契約書、賃金台帳、出勤簿、対象者属性を証明する書類', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 雇入れに係るハローワーク等の紹介状、対象者の雇用契約書、賃金台帳、出勤簿、対象者属性を証明する書類', application_method:'', template_available:'', template_urls:'', target_area:'全国' },
 
   { id:'15', name:'地域中小企業応援ファンド（スタートアップ応援型）', type:'補助金', ministry:'中小企業庁',
     target_industry:'全業種', max_employees:'', min_years:'0', max_years:'3',
@@ -618,7 +625,7 @@ const FALLBACK = [
     url:'https://j-net21.smrj.go.jp/', active:'TRUE',
     note:'都道府県・実施機関により内容が異なる',
     use_cases:'新商品開発費用、ECサイト構築、地域ブランド化のためのデザイン制作',
-    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、事業計画書（自治体所定様式）、見積書、設立年数を示す書類', application_method:'', template_available:'', template_urls:'' },
+    required_documents:'※要確認: 履歴事項全部証明書、納税証明書、事業計画書（自治体所定様式）、見積書、設立年数を示す書類', application_method:'', template_available:'', template_urls:'', target_area:'全国' },
 ];
 
 // ============================================================
@@ -628,6 +635,21 @@ const PURPOSES = [
   'IT化・デジタル化', '設備投資', '販路開拓・集客',
   '雇用・人材育成', '事業転換・新規事業', '省力化・自動化',
   '創業支援', '労働環境改善', '研究開発'
+];
+
+// ============================================================
+// 都道府県マスター
+// ============================================================
+// Jグランツ（デジタル庁の公開API）が返す対象地域と表記を揃えている。
+const PREFECTURES = [
+  '北海道', '青森県', '岩手県', '宮城県', '秋田県', '山形県', '福島県',
+  '茨城県', '栃木県', '群馬県', '埼玉県', '千葉県', '東京都', '神奈川県',
+  '新潟県', '富山県', '石川県', '福井県', '山梨県', '長野県',
+  '岐阜県', '静岡県', '愛知県', '三重県',
+  '滋賀県', '京都府', '大阪府', '兵庫県', '奈良県', '和歌山県',
+  '鳥取県', '島根県', '岡山県', '広島県', '山口県',
+  '徳島県', '香川県', '愛媛県', '高知県',
+  '福岡県', '佐賀県', '長崎県', '熊本県', '大分県', '宮崎県', '鹿児島県', '沖縄県'
 ];
 
 // ============================================================
@@ -641,6 +663,7 @@ let currentStep = 1;
 // ============================================================
 document.addEventListener('DOMContentLoaded', () => {
   renderPurposes();
+  renderPrefectures();
   renderProgress(1);
   loadData();
 });
@@ -648,14 +671,19 @@ document.addEventListener('DOMContentLoaded', () => {
 async function loadData() {
   const el = document.getElementById('dataStatus');
 
-  if (SHEET_ID === '13vrbrpslBFhSQVlva9QodmdI2TWBcWyDgPWm4WdxUfo') {
+  // 未設定判定はプレースホルダー文字列そのものとの比較ではなく接頭辞で行う。
+  // setup_subsidy_sheet.py が 'YOUR_SHEET_ID_HERE' を実IDへ一括置換するため、
+  // 比較対象の文字列も一緒に書き換わってしまい判定が壊れる。
+  if (!SHEET_ID || SHEET_ID.startsWith('YOUR_')) {
     subsidies = FALLBACK;
     el.innerHTML = 'データ: <span class="warn">内蔵データ（初期データ）を使用中 — Sheets連携後に自動更新されます</span>';
     return;
   }
 
   try {
-    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    // headers=1 を明示する。省略すると gviz が1行目（英語キー）と2行目（日本語ラベル）を
+    // まとめて1つのヘッダーとして扱い（"id ID" のように結合される）、列名が一致しなくなる。
+    const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&headers=1&sheet=${encodeURIComponent(SHEET_NAME)}`;
     const res = await fetch(url);
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const text = await res.text();
@@ -681,7 +709,8 @@ function parseCSV(text) {
     const obj = {};
     headers.forEach((h, i) => { obj[h.trim()] = (vals[i] || '').trim(); });
     return obj;
-  }).filter(r => r.name);
+  // id が空の行は日本語ラベル行（シート2行目）なので除外する
+  }).filter(r => r.name && r.id);
 }
 
 function parseRow(line) {
@@ -702,6 +731,15 @@ function parseRow(line) {
 function filter(answers) {
   return subsidies.filter(s => {
     if (s.active !== 'TRUE') return false;
+
+    // 対象地域チェック（空欄・全国は地域を問わない）
+    if (s.target_area && s.target_area !== '全国') {
+      const areas = s.target_area.split('|').map(a => a.trim());
+      // 市区町村限定の制度は「愛知県名古屋市」のように都道府県名から始まる形で
+      // 格納されるため、前方一致で都道府県レベルの判定ができる。
+      const ok = areas.some(a => a === '全国' || a.startsWith(answers.prefecture));
+      if (!ok) return false;
+    }
 
     // 業種チェック
     if (s.target_industry && s.target_industry !== '全業種') {
@@ -733,6 +771,7 @@ function filter(answers) {
 
 function getAnswers() {
   return {
+    prefecture:  document.getElementById('prefecture').value,
     industry:    document.getElementById('industry').value,
     employees:   parseInt(document.getElementById('employees').value) || 0,
     capital:     document.getElementById('capital').value,
@@ -748,6 +787,7 @@ function getAnswers() {
 // ============================================================
 function goTo(step) {
   if (step === 2) {
+    if (!document.getElementById('prefecture').value) { alert('所在地を選択してください'); return; }
     if (!document.getElementById('industry').value)   { alert('業種を選択してください'); return; }
     if (!document.getElementById('employees').value)  { alert('従業員数を選択してください'); return; }
     if (!document.getElementById('capital').value)    { alert('資本金を選択してください'); return; }
@@ -819,6 +859,11 @@ function showResults() {
           <div class="meta-label">申請状況</div>
           <div class="meta-value">${esc(s.deadline) || '要確認'}</div>
         </div>
+        ${s.target_area ? `
+        <div class="meta-item">
+          <div class="meta-label">対象地域</div>
+          <div class="meta-value">${esc(s.target_area.split('|').join('、'))}</div>
+        </div>` : ''}
         ${s.application_method ? `
         <div class="meta-item">
           <div class="meta-label">申請方法</div>
@@ -840,6 +885,12 @@ function showResults() {
 // ============================================================
 // UI ヘルパー
 // ============================================================
+function renderPrefectures() {
+  const el = document.getElementById('prefecture');
+  el.innerHTML = '<option value="">選択してください</option>' +
+    PREFECTURES.map(p => `<option value="${p}">${p}</option>`).join('');
+}
+
 function renderPurposes() {
   document.getElementById('purposeGrid').innerHTML = PURPOSES.map(p => `
     <label class="checkbox-item" id="ci_${p}">
